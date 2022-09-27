@@ -4,10 +4,11 @@ import random
 import sys
 import time
 
+
 class GrowthBot:
     username = '<INSERT USERNAME/EMAIL>'
     password = '<INSERT PASSWORD>'
-    
+
     # enter all the hashtags you'd like the bot to search through and comment on, separated by a comma
     hashtags = ['chickens']
 
@@ -28,20 +29,24 @@ class GrowthBot:
         self.hustle()
 
     def login(self):
-        self.browser.get('https://www.instagram.com/accounts/login/?source=auth_switcher')
+        self.browser.get(
+            'https://www.instagram.com/accounts/login/?source=auth_switcher')
         time.sleep(2)
 
-        username_field = self.browser.find_element_by_xpath("//input[@name='username']")
+        username_field = self.browser.find_element_by_xpath(
+            "//input[@name='username']")
         username_field.clear()
         username_field.send_keys(self.username)
         time.sleep(1)
 
-        password_field = self.browser.find_element_by_xpath("//input[@name='password']")
+        password_field = self.browser.find_element_by_xpath(
+            "//input[@name='password']")
         password_field.clear()
         password_field.send_keys(self.password)
         time.sleep(1)
 
-        login_button = self.browser.find_element_by_xpath("//button[@type='submit']")
+        login_button = self.browser.find_element_by_xpath(
+            "//button[@type='submit']")
         login_button.click()
         time.sleep(2)
 
@@ -52,11 +57,12 @@ class GrowthBot:
 
     def getTopPosts(self):
         for hashtag in self.hashtags:
-            self.browser.get('https://www.instagram.com/explore/tags/' + hashtag +'/')
+            self.browser.get(
+                'https://www.instagram.com/explore/tags/' + hashtag + '/')
             time.sleep(2)
 
             links = self.browser.find_elements_by_tag_name('a')
-            condition = lambda link: '.com/p/' in link.get_attribute('href')
+            def condition(link): return '.com/p/' in link.get_attribute('href')
             valid_links = list(filter(condition, links))
 
             for i in range(0, 9):
@@ -69,12 +75,13 @@ class GrowthBot:
             self.browser.get(link)
             time.sleep(1)
 
-            self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+            self.browser.execute_script(
+                "window.scrollTo(0, document.body.scrollHeight);")
             time.sleep(1)
-            
+
             self.comment()
             time.sleep(2)
-            
+
             self.like()
 
             self.price += 0.02
@@ -82,7 +89,7 @@ class GrowthBot:
             time.sleep(sleeptime)
 
     def comment(self):
-        comment_input = lambda: self.browser.find_element_by_tag_name('textarea')
+        def comment_input(): return self.browser.find_element_by_tag_name('textarea')
         comment_input().click()
         comment_input().clear()
 
@@ -95,12 +102,14 @@ class GrowthBot:
         comment_input().send_keys(Keys.RETURN)
 
     def like(self):
-        like_button = lambda: self.browser.find_element_by_xpath('//span[@class="glyphsSpriteHeart__outline__24__grey_9 u-__7"]')
+        def like_button(): return self.browser.find_element_by_xpath(
+            '//span[@class="glyphsSpriteHeart__outline__24__grey_9 u-__7"]')
         like_button().click()
 
     def finalize(self):
-        print 'You gave $' + string(self.price) + ' back to the community.'
+        print('All finished!')
         self.browser.close()
         sys.exit()
+
 
 growth_bot = GrowthBot()
